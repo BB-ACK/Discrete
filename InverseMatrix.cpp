@@ -114,7 +114,7 @@ public:
             vector<vector<double>> two(2, vector<double>(2));
             two[0][0] = this->mat[1][1] / det;
             two[0][1] = -this->mat[0][1] / det;
-            two[1][0] = -this->mat[1][1] / det;
+            two[1][0] = -this->mat[1][0] / det;
             two[1][1] = this->mat[0][0] / det;
 
             return two;
@@ -221,6 +221,35 @@ public:
 
         return true;
     }
+
+    // 상수 행렬 입력받기 - 추가과제파트
+    vector<double> getConstants() {
+        vector<double> c(this->degree);
+        cout << "\n연립방정식의 상수 벡터를 입력하세요. " << '\n';
+
+        for(int i = 0; i < this->degree; i++) {
+            cout << i+1 << "행의 상수벡터: ";
+            cin >> c[i];
+        }
+
+        return c;
+    }
+
+    // 연립방정식의 해 계산 
+    vector<double> getSolution(vector<vector<double>> &matrix, vector<double> &constant) {
+        vector<double> sol;
+
+        for(int i = 0; i < this->degree; i++) {
+            double sum = 0.0;
+            for(int j = 0; j < this->degree; j++) {
+                sum += matrix[i][j] * constant[j];
+            }
+            sol.push_back(sum);
+        }
+
+        return sol;
+    }
+
 };
 
 int main() {
@@ -245,6 +274,16 @@ int main() {
         else {
             cout << '\n' << "두 방법의 결과가 동일합니다. " << '\n';
         }
+
+
+        // 추가 구현 파트 - 역행렬을 이용한 연립방정식의 해
+        vector<double> constant = im.getConstants();
+        vector<double> solution = im.getSolution(inverseByGause, constant);
+
+        // 해출력
+        cout << '\n' << "역행렬을 이용한 연립방정식의 해: " << '\n';
+        for(int i = 0; i < solution.size(); i++)
+            cout << i+1 << "열 미지수: " << solution[i] << '\n';
     }
 
     return 0;
