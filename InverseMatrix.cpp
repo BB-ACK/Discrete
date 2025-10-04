@@ -45,18 +45,6 @@ public:
         }
     }
 
-    // 가우스 소거법 출력문
-    void printGause(vector<vector<double>> &matrix) {
-        for (int i = 0; i < matrix.size(); i++) {
-            cout << "| ";
-            for (int j = matrix.size(); j < matrix[0].size(); j++)
-            {
-                cout << matrix[i][j] << "  ";
-            }
-            cout << "|" << '\n';
-        }
-    }
-
     // 전치행렬 반환
     vector<vector<double>> transepose(vector<vector<double>> matrix) {
         int size = matrix.size();
