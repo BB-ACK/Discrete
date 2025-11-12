@@ -77,7 +77,7 @@ public:
     bool isSymmetric(Matrix mat) {
         for(int r = 0; r < 5; r++) {
             for(int c = 0; c < 5; c++) {
-                if(mat[r][c] == 1 && mat[c][r] != 1) {
+                if(mat[r][c] == 1 && mat[c][r] != 1) { // (a,b)가 1이면, (b, a)도 1이여야 한다
                     cout << "이 관계는 대칭관계가 아닙니다.\n";
                     return false;
                 }
@@ -98,12 +98,12 @@ public:
 
             for(int r = 0; r < 5; r++) {
                 for(int c = 0; c < 5; c++) {
-                    combined[r][c] |= power[r][c]; // 둘다 1인 원소만 남음 
+                    combined[r][c] |= power[r][c]; // 둘 다 0인 공백을 제외하고 채운다 
                 }
             }
         }
 
-        bool result = combined == mat; // R^5가 아니면 이전의 함수도 부분집합에 속하지 않게됨
+        bool result = combined == mat; // R^5가 아니면 이전의 함수도 부분집합에 속하지 않게됨, R+가 R인지 판단
         
         if(result) 
             cout << "이 관계는 추이관계입니다.\n";
