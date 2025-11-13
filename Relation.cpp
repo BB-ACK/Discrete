@@ -173,6 +173,14 @@ public:
 
         return mat;
     }
+
+    // 추가기능 - 합성관계
+    // 기존에 만들었던 부울곱을 활용할 수 있음
+    Matrix getCompositeRelation(Matrix mat) {
+        Matrix result = this->boolean(this->relationship, mat);
+
+        return result;
+    }
 };
 
 int main() {
@@ -241,5 +249,18 @@ int main() {
         }
     
     }
+
+    // 추가기능 - 합성관계
+    cout << "\n\n합성할 새로운 관계 S를 입력하세요.\n";
+    Relation S; // 합성함수의 활용될 관계 S
+
+    cout << "[관계 S의 포함된 순서쌍]\n";
+    S.printRelation(S.relationship);
+
+    Matrix composite = R.getCompositeRelation(S.relationship); // S R을 만듦
+
+    cout << "[관계 S ∘ R의 순서쌍]\n";
+    R.printRelation(composite);
+
     return 0;
 }
