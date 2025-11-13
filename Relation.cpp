@@ -34,7 +34,6 @@ public:
 
     // 순서쌍 출력문
     void printRelation(Matrix mat) {
-        cout << "[관계 R의 포함된 순서쌍]\n";
         for(int r = 0; r < 5; r++) {
             for(int c= 0; c < 5; c++) {
                 if(mat[r][c] == 1)
@@ -135,13 +134,54 @@ public:
             cout << "\b\b} ";
         }
     }
+
+    // 반사폐포 
+    Matrix getReflexiveClosure(Matrix mat) {
+        for(int i = 0; i < 5; i++) {
+                mat[i][i] = 1; // 반사관계로 만들기 위해 대각성분 모두 1로 변경
+        }
+
+        return mat;
+    }
+
+
+    // 대칭폐포
+    Matrix getSymmetricClosure(Matrix mat) {
+        for(int r = 0; r < 5; r++) {
+            for(int c = 0; c < 5; c++) {
+                if(mat[r][c] == 1 && mat[c][r] != 1) 
+                    mat[c][r] = 1; // 대칭관계로 만들기 위해 1로 변경
+            }
+        }
+
+        return mat;
+    }
+
+    // 추이폐포 - 와샬 알고리즘을 이용 
+    Matrix getTransitiveClosure(Matrix mat) {
+        // 거쳐가는 경유 노드
+        for(int k = 0; k < 5; k++) {
+            // 출발 노드 
+            for(int i = 0; i < 5; i++) {
+                // 도착 노드
+                for(int j = 0; j < 5; j++) {
+                    if(mat[i][k] == 1 && mat[k][j] == 1)
+                        mat[i][j] = 1; // i가 k를 거쳐서 j로 갈 수 있으면 i j도 존재하게함
+                }
+            }
+        }
+
+        return mat;
+    }
 };
 
 int main() {
     cout << "집합 A = [1, 2, 3, 4, 5]" << '\n';
     Relation R; // 객체 생성시 생성자 호출과 함께 원소 입력
+
+    cout << "[관계 R의 포함된 순서쌍]\n";
     R.printRelation(R.relationship); // 관계 순서쌍 출력
-    
+
     bool isR = R.isReflexive(R.relationship); // 반사관계 판단
     bool isS = R.isSymmetric(R.relationship); // 대칭관계 판단
     bool isT = R.isTransitive(R.relationship); // 추이관계 판단
@@ -151,9 +191,55 @@ int main() {
         cout << "이 관계는 동치관계입니다.\n\n";
         R.printEquivalence(R.relationship);
     }
-    else
-        cout << "이 관계는 동치관계가 아닙니다.\n";
+    else { // 동치관계가 아니라면 각 폐포로 변환
+        cout << "이 관계는 동치관계가 아닙니다.\n\n";
+        Matrix mat = R.relationship; // 폐포로 변경될 Matrix
 
+        // 반사관계가 아닌 경우 변환
+        if(!isR) {
+            cout << "[반사폐포 전 관계 R의 순서쌍]\n";
+            R.printRelation(mat); // 반사폐포 전 관계
+            mat = R.getReflexiveClosure(mat);
+            
+            cout << "[반사폐포 후 관계 R의 순서쌍]\n";
+            R.printRelation(mat); // 반사폐포 후 관계
+        }
+        
+        // 대칭관계가 아닌 경우 변환
+        if(!isS) {
+            cout << "[대칭폐포 전 관계 R의 순서쌍]\n";
+            R.printRelation(mat); // 대칭폐포 전 관계
+            mat = R.getSymmetricClosure(mat);
 
+            cout << "[대칭폐포 후 관계 R의 순서쌍]\n";
+            R.printRelation(mat); // 대칭폐포 후 관계
+        }
+
+        // 추이관계가 아닌 경우 변환
+        if (!isT) {
+            cout << "[추이폐포 전 관계 R의 순서쌍]\n";
+            R.printRelation(mat); // 추이폐포 전 관계
+            mat = R.getTransitiveClosure(mat);
+
+            cout << "[추이폐포 후 관계 R의 순서쌍]\n";
+            R.printRelation(mat); // 추이폐포 후 관계
+        }
+
+        // 변환 후 판별 단계
+        R.relationship = mat; // 기존 관계를 폐포 변환 후로 교체
+
+        isR = R.isReflexive(R.relationship);
+        isS = R.isSymmetric(R.relationship);
+        isT = R.isTransitive(R.relationship);
+
+        if(isR == true && isS == true && isT == true){
+            cout << "이 관계는 동치관계입니다.\n\n";
+            R.printEquivalence(R.relationship);
+        }
+        else {
+            cout << "로직의 오류로 인한 동치관계가 아닙니다.\n";
+        }
+    
+    }
     return 0;
 }
