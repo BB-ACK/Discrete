@@ -60,7 +60,7 @@ public:
         return result;
     }
 
-    // 반사관계 판별
+    // 반사관계 판별 - 대각 성분이 모두 1인지
     bool isReflexive(Matrix mat) {
         for(int i = 0; i < 5; i++) {
             if(mat[i][i] != 1) {
@@ -73,7 +73,7 @@ public:
         return true;
     } 
 
-    // 대칭관계 판별
+    // 대칭관계 판별 - (a, b)가 있으면 (b, a)도 존재하는지
     bool isSymmetric(Matrix mat) {
         for(int r = 0; r < 5; r++) {
             for(int c = 0; c < 5; c++) {
@@ -112,6 +112,29 @@ public:
 
         return result;
     }
+
+    // 동치류 출력 - 동치인 경우에만 해당
+    void printEquivalence(Matrix mat) {
+        cout << "[관계 R의 포함된 동치류]\n";
+        
+        // 중복 출력 방지용 방문 벡터 
+        vector<bool> visited(5, false);
+
+        for(int r = 0; r < 5; r++) {
+            // 이미 방문한 곳이라면 패스
+            if(visited[r] == true)
+                continue;
+            
+            cout << "{";
+            for(int c = 0; c < 5; c++) {
+                if(mat[r][c] == 1) {
+                    visited[c] = true; // 방문처리
+                    cout << c+1 << ", ";
+                }
+            }
+            cout << "\b\b} ";
+        }
+    }
 };
 
 int main() {
@@ -122,6 +145,15 @@ int main() {
     bool isR = R.isReflexive(R.relationship); // 반사관계 판단
     bool isS = R.isSymmetric(R.relationship); // 대칭관계 판단
     bool isT = R.isTransitive(R.relationship); // 추이관계 판단
+
+    // 동치관계 판별
+    if(isR == true && isS == true && isT == true) {
+        cout << "이 관계는 동치관계입니다.\n\n";
+        R.printEquivalence(R.relationship);
+    }
+    else
+        cout << "이 관계는 동치관계가 아닙니다.\n";
+
 
     return 0;
 }
